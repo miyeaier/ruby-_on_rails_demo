@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :article do
-    title { "MyString" }
+    title { "This is an awesome title" }
   end
 end
