@@ -19,22 +19,11 @@ require "action_cable/engine"
 Bundler.require(*Rails.groups)
 
 module RailsDemo
-  
   class Application < Rails::Application
-    # Initialize configuration defaults for originally generated Rails version.
+    initializer(:remove_activestorage_routes, after: :add_routing_paths) do |app|
+      app.routes_reloader.paths.delete_if { |path| path =~ /activestorage|actionmailbox/ }
+    end
     config.load_defaults 7.0
-
-    # Configuration for the application, engines, and railties goes here.
-    #
-    # These settings can be overridden in specific environments using the files
-    # in config/environments, which are processed later.
-    #
-    # config.time_zone = "Central Time (US & Canada)"
-    # config.eager_load_paths << Rails.root.join("extras")
-
-    # Only loads a smaller set of middleware suitable for API only apps.
-    # Middleware like session, flash, cookies can be added back manually.
-    # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
     config.generators do |generate|
@@ -45,18 +34,17 @@ module RailsDemo
       generate.routing_specs false
       generate.controller_specs false
       generate.request_specs false
-   end
-
+    end
 
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins '*'
-        resource'*',
-        headers: :any,
-        methods:%i[get post put delete],
-        expose: %w(access-token expiry token-type uid client),
-        max_age: 0
+        origins "*"
+        resource "*",
+                 headers: :any,
+                 methods: %i[get post put delete],
+                 expose: %w(access-token expiry token-type uid client),
+                 max_age: 0
       end
-    end 
+    end
   end
 end
