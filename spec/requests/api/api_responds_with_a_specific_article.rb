@@ -5,7 +5,7 @@ RSpec.describe 'GET /api/articles/:id' do
     before do
       get "/api/articles/#{article.id}"
     end
-
+#ASSERT
     it 'is exptected to return a 200 status' do
       expect(response).to have_http_status 200
     end
